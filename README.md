@@ -27,8 +27,12 @@ Logs sent via WebSocket must be in **JSON format**:
   "route": "login"
 }
 
+---
+
 ## 🛠️ Loki Integration
+
 Logs are forwarded to Grafana Loki via its /loki/api/v1/push HTTP endpoint. You can adjust Loki settings or retention policy via its configuration file (e.g. local-config.yaml) to control log rotation or expiration.
+
 ---
 
 ## ▶️ Run the Server
