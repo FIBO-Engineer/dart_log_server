@@ -1,4 +1,4 @@
-# 🛰️ dart_log_server
+# 🛰️ Dart Log Server
 
 This project provides a lightweight **WebSocket server built with Dart**, designed to support **real-time logging** from any frontend or backend services (e.g. Flutter apps, backend APIs, monitoring agents).
 
@@ -24,9 +24,9 @@ Logs sent via WebSocket must be in **JSON format**:
   "level": "info",
   "source": "app",
   "message": "User logged in",
-  "route": "login"
+  "route": "/login"
 }
-
+```
 ---
 
 ## 🛠️ Loki Integration
