@@ -49,12 +49,28 @@ class LogWebSocketServer {
     }
   }
 
-  void _handleConnection(WebSocket socket) {
+  void _handleConnection(WebSocket socket) async {
     _clients.add(socket);
     Logger.log('New client connected. Total clients: ${_clients.length}');
 
     final welcome = {"success": true, "message": "Connected to log server."};
     socket.add(jsonEncode(welcome));
+
+    try {
+      final logs = await LokiService().queryAll();
+      final logList = logs.map((log) => log.toJson()).toList();
+
+      socket.add(jsonEncode({"type": "initial_logs", "data": logList}));
+    } catch (e) {
+      Logger.error('Failed to fetch initial logs from Loki: $e');
+      socket.add(
+        jsonEncode({
+          "type": "initial_logs",
+          "data": [],
+          "error": "Unable to fetch initial logs",
+        }),
+      );
+    }
 
     socket.listen(
       (data) => _handleMessage(socket, data),
@@ -74,7 +90,6 @@ class LogWebSocketServer {
     try {
       final parsed = jsonDecode(data);
 
-      // Validate log format
       if (parsed is! Map<String, dynamic> ||
           !parsed.containsKey('level') ||
           !parsed.containsKey('message')) {
@@ -89,9 +104,8 @@ class LogWebSocketServer {
 
       final log = LogModel.fromJson(parsed);
 
-      LokiService;
+      await LokiService.sendToLoki(log);
 
-      // Broadcast log
       final logJson = log.toJson();
       _broadcast(logJson, sender);
 
