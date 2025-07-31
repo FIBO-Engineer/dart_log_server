@@ -1,0 +1,24 @@
+name: flutter Release
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  IMAGE_NAME: journeykmutt/bgc_dart_log
+
+jobs:
+  build-flutter-and-push-image-to-docker-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: docker login
+        run: | # log into docker hub account
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: Build the Docker image with latest tag
+        run: |
+          docker build . --file Dockerfile --tag $IMAGE_NAME:latest
+      - name: Docker Push with latest tag
+        run: |
+          docker push $IMAGE_NAME:latest
