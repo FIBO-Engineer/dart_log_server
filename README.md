@@ -42,4 +42,4 @@ To start the WebSocket server, run the following command:
 ```bash
 dart run bin/main.dart
 
-loki-windows-amd64.exe --config.file=loki-local-config.yaml
+.\loki-windows-amd64.exe --config.file=loki-local-config.yaml
